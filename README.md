@@ -19,6 +19,13 @@ extern "C" WINTERMBOX_API int wtb_init(void);
 extern "C" WINTERMBOX_API int wtb_clear(void);
 
 /**
+ * @brief Clears the given line (y coordinate) and moves the cursor to the beginning of the line.
+ * @param y The y coordinate (0-based).
+ * @return 1 on success, 0 when wtb is not initalized.
+ */
+extern "C" WINTERMBOX_API int wtb_clear_line(int y);
+
+/**
  * @brief Sets the cursor position.
  * @param x The x coordinate (0-based).
  * @param y The y coordinate (0-based).
@@ -71,4 +78,24 @@ extern "C" WINTERMBOX_API int wtb_set_screen_buffer(int buffer_id);
  * @return 1 on success, 0 when wtb is not initalized or invalid color.
  */
 extern "C" WINTERMBOX_API int wtb_set_color(int fg, int bg);
+
+/**
+ * @brief Sets a custom foreground color using RGB values.
+ * @param r Red component (0-255).
+ * @param g Green component (0-255).
+ * @param b Blue component (0-255).
+ * @return 1 on success, 0 when wtb is not initalized or invalid color.
+ */
+extern "C" WINTERMBOX_API int wtb_set_custom_foreground_color(int r, int g, int b);
+
+/**
+ * @brief Sets a custom background color using RGB values.
+ * @param r Red component (0-255).
+ * @param g Green component (0-255).
+ * @param b Blue component (0-255).
+ * @return 1 on success, 0 when wtb is not initalized or invalid color.
+ */
+extern "C" WINTERMBOX_API int wtb_set_custom_background_color(int r, int g, int b);
 ```
+## Projects using WinTermbox
+- [Windows Repair Tool](https://github.com/Layviz/WindowsRepairTool) - a command line based tool for repairing Windows
