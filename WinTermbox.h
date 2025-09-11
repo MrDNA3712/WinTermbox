@@ -84,6 +84,13 @@ extern "C" WINTERMBOX_API int wtb_init(void);
 extern "C" WINTERMBOX_API int wtb_clear(void);
 
 /**
+ * @brief Clears the given line (y coordinate) and moves the cursor to the beginning of the line.
+ * @param y The y coordinate (0-based).
+ * @return 1 on success, 0 when wtb is not initalized.
+ */
+extern "C" WINTERMBOX_API int wtb_clear_line(int y);
+
+/**
  * @brief Sets the cursor position.
  * @param x The x coordinate (0-based).
  * @param y The y coordinate (0-based).
@@ -137,6 +144,24 @@ extern "C" WINTERMBOX_API int wtb_set_screen_buffer(int buffer_id);
  */
 extern "C" WINTERMBOX_API int wtb_set_color(int fg, int bg);
 
+/**
+ * @brief Sets a custom foreground color using RGB values.
+ * @param r Red component (0-255).
+ * @param g Green component (0-255).
+ * @param b Blue component (0-255).
+ * @return 1 on success, 0 when wtb is not initalized or invalid color.
+ */
+extern "C" WINTERMBOX_API int wtb_set_custom_foreground_color(int r, int g, int b);
+
+/**
+ * @brief Sets a custom background color using RGB values.
+ * @param r Red component (0-255).
+ * @param g Green component (0-255).
+ * @param b Blue component (0-255).
+ * @return 1 on success, 0 when wtb is not initalized or invalid color.
+ */
+extern "C" WINTERMBOX_API int wtb_set_custom_background_color(int r, int g, int b);
+
 #endif // !WINTERMBOX_H_INCL
 
 #ifdef WINTERMBOX_IMPL
@@ -169,6 +194,14 @@ int wtb_clear(void) {
         return 0;
     }
     wprintf(L"\x1b[2J\x1b[H");
+    return 1;
+}
+
+int wtb_clear_line(int y) {
+    if (!is_intialized) {
+        return 0;
+    }
+    wprintf(L"\x1b[%d;1H\x1b[2K", y + 1);
     return 1;
 }
 
@@ -317,6 +350,28 @@ int wtb_set_color(int fg, int bg) {
         bg = 49; // Default background color
     }
     wprintf(L"\x1b[%d;%dm", fg, bg);
+    return 1;
+}
+
+int wtb_set_custom_foreground_color(int r, int g, int b) {
+    if (!is_intialized) {
+        return 0;
+    }
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+        return 0; // Invalid color component
+    }
+    wprintf(L"\x1b[38;2;%d;%d;%dm", r, g, b);
+    return 1;
+}
+
+int wtb_set_custom_background_color(int r, int g, int b) {
+    if (!is_intialized) {
+        return 0;
+    }
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+        return 0; // Invalid color component
+    }
+    wprintf(L"\x1b[48;2;%d;%d;%dm", r, g, b);
     return 1;
 }
 
